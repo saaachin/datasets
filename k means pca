@@ -1,0 +1,59 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+dataset = pd.read_csv('https://raw.githubusercontent.com/JangirSumit/kmeans-clustering/master/driver-data.csv')
+dataset.head()
+
+# Not important in this dataset because it's already reduced
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=2)
+
+pcomponents = pca.fit_transform(dataset)
+
+pdata = pd.DataFrame(data=pcomponents, columns=['p1', 'p2'])
+
+pdata.head()
+
+from sklearn.preprocessing import StandardScaler
+
+sc = StandardScaler()
+
+X = sc.fit_transform(pdata)
+
+X
+
+from sklearn.cluster import KMeans
+
+elbow = []
+
+kmeansmodels = []
+
+for i in range(1, 8):
+    kmeans = KMeans(n_clusters=i, init='k-means++')
+    kmeans.fit(X)
+
+    kmeansmodels.append(kmeans)
+
+    elbow.append(kmeans.inertia_)
+
+plt.plot(elbow)
+
+print(elbow)
+
+print(kmeansmodels)
+
+optimal_model = kmeansmodels[1]
+optimal_model
+
+y_kmeans = optimal_model.predict(X)
+y_kmeans
+
+X[y_kmeans == 0, 1]
+
+plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1], color='yellow', label='Cluster_1')
+plt.scatter(X[y_kmeans == 1, 0], X[y_kmeans == 1, 1], color='green', label='Cluster_2')
+plt.scatter(optimal_model.cluster_centers_[:, 0], optimal_model.cluster_centers_[:, 1], color='red', label='Centroid')
+
+plt.title("K-Means Clustering")
