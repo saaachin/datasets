@@ -1,0 +1,52 @@
+df=df.sample(frac=1)
+sns.countplot(df['Species'])
+
+#splitting test and train data
+from sklearn.model_selection import train_test_split
+X = df[['Sepal.Length','Sepal.Width', 'Petal.Length', 'Petal.Width']]
+y = df['Species']
+(X_train, X_test, y_train, y_test) = train_test_split(X, y, train_size=0.7, random_state=1)
+
+#training using decision tree
+from sklearn.tree import DecisionTreeClassifier
+dtc = DecisionTreeClassifier()
+dtc.fit(X_train, y_train)
+dtc.score(X_test, y_test)
+
+
+#fitting
+clf_gini = DecisionTreeClassifier(criterion = "gini", random_state = 100,
+                               max_depth=3, min_samples_leaf=5)
+clf_gini.fit(X_train, y_train)
+#predicting
+y_pred = clf_gini.predict(X_test)
+y_pred
+
+#Accuraccy score
+from sklearn.metrics import accuracy_score
+print ("Accuracy is :", accuracy_score(y_test,y_pred)*100)
+
+#confusion Matrix
+from sklearn.metrics import confusion_matrix
+results = confusion_matrix(y_test, y_pred) 
+print ('Confusion Matrix :')
+print(results) 
+
+#Plotting Decision Tree
+target = list(df['Species'].unique())
+feature_names = list(X.columns)
+
+from sklearn import tree
+import graphviz
+dot_data = tree.export_graphviz(clf_gini,
+                                out_file=None, 
+                      feature_names=feature_names,  
+                      class_names=target,  
+                      filled=True, rounded=True,  
+                      special_characters=True)  
+graph = graphviz.Source(dot_data)  
+graph
+
+from sklearn.tree import export_text
+r = export_text(clf_gini, feature_names=feature_names)
+print(r)
