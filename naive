@@ -1,0 +1,10 @@
+from sklearn.naive_bayes import GaussianNB
+nb=GaussianNB()
+nb.fit(x_train,y_train)
+y_prednb=nb.predict(x_test)
+from sklearn.metrics import confusion_matrix,accuracy_score,f1_score,precision_score,recall_score
+print("accuracy score",accuracy_score(y_test,y_prednb))
+print("f1_score",f1_score(y_test,y_prednb))
+print("precision_score",precision_score(y_test,y_prednb))
+print('recall score',recall_score(y_test,y_prednb))
+print("confusion matrix",confusion_matrix(y_test,y_prednb))
