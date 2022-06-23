@@ -1,0 +1,11 @@
+#kernels are rbf,polynomial,linear,sigmoid
+from sklearn.svm import SVC
+SV=SVC(kernel="linear")
+SV.fit(x_train,y_train)
+y_predi=SV.predict(x_test)
+from sklearn.metrics import confusion_matrix,accuracy_score,f1_score,precision_score,recall_score
+print("accuracy score",accuracy_score(y_test,y_predi))
+print("f1_score",f1_score(y_test,y_predi))
+print("precision_score",precision_score(y_test,y_predi))
+print('recall score',recall_score(y_test,y_predi))
+print("confusion matrix",confusion_matrix(y_test,y_predi))
